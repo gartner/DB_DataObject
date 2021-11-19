@@ -56,7 +56,7 @@ if (empty($options)) {
 set_time_limit(0);
 
 // use debug level from file if set..
-DB_DataObject::debugLevel(isset($options['debug']) ? $options['debug'] : 1);
+DB_DataObject::debugLevel($options['debug'] ?? 1);
 
 $generator = new DB_DataObject_Generator;
 $generator->start();

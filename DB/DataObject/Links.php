@@ -41,32 +41,32 @@ class DB_DataObject_Links
      /**
      * @property {DB_DataObject}      do   DataObject to apply this to.
      */
-    var $do = false;
+    var bool $do = false;
     
     
     /**
      * @property {Array|String} load    What to load, 'all' or an array of properties. (default all)
      */
-    var $load = 'all';
+    var string $load = 'all';
     /**
      * @property {String|Boolean}       scanf   use part of column name as resulting
      *                                          property name. (default false)
      */
-    var $scanf = false;
+    var bool $scanf = false;
     /**
      * @property {String|Boolean}       printf  use column name as sprintf for resulting property name..
      *                                     (default %s_link if apply is true, otherwise it is %s)
      */
-    var $printf = false;
+    var bool $printf = false;
     /**
      * @property {Boolean}      cached  cache the result, so future queries will use cache rather
      *                                  than running the expensive sql query.
      */
-    var $cached = false;
+    var bool $cached = false;
     /**
      * @property {Boolean}      apply   apply the result to this object, (default true)
      */
-    var $apply = true;
+    var bool $apply = true;
    
     
     //------------------------- RETURN ------------------------------------
@@ -83,7 +83,7 @@ class DB_DataObject_Links
      *  @param {Array}           cfg  Configuration (basically properties of this object)
      */
     
-    function DB_DataObject_Links($do,$cfg= array())
+    function __construct($do,$cfg= array())
     {
         // check if do is set!!!?
         $this->do = $do;
@@ -170,12 +170,12 @@ class DB_DataObject_Links
        
         $ret = false;
         if ($link) {
-            
+
             if ($obj->get($link, $this->do->$field)) {
                 $ret = $obj;
             }
-            
-            
+
+
         // this really only happens when no link config is set (old BC stuff)    
         } else if ($obj->get($this->do->$field)) {
             $ret= $obj;
@@ -215,7 +215,7 @@ class DB_DataObject_Links
                 );
                 
             } 
-            list($table,$link) = explode(':', $field[1]);
+            [$table, $link] = explode(':', $field[1]);
             
             return array(
                 $this->do->factory($table),
@@ -238,7 +238,7 @@ class DB_DataObject_Links
             
             return false;
         }
-        list($table,$link) = explode(':', $links[$field]);
+        [$table, $link] = explode(':', $links[$field]);
     
         
         //??? needed???
@@ -367,7 +367,7 @@ class DB_DataObject_Links
         
         if ($links) {   
             foreach($links as $key => $match) {
-                list($table,$link) = explode(':', $match);
+                [$table, $link] = explode(':', $match);
                 $k = sprintf($format, str_replace('.', '_', $key));
                 // makes sure that '.' is the end of the key;
                 if ($p = strpos($key,'.')) {
@@ -448,7 +448,7 @@ class DB_DataObject_Links
                     // failed..
                     return $ret;
                 }
-                list($table,$link) = explode(':',$links[$field]);
+                [$table, $link] = explode(':',$links[$field]);
                 return $this->getLinkArray($field,$table);
             } 
             if (!($p = strpos($field,'_'))) {

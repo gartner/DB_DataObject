@@ -73,26 +73,22 @@ class DB_DataObject_Generator extends DB_DataObject
     /**
      * associative array table -> array of table row objects
      *
-     * @var array
      * @access private
      */
-    var $_definitions;
+    var array $_definitions;
 
     /**
      * active table being output
      *
-     * @var string
      * @access private
      */
-    var $table; // active tablename
-
+    var ?string $table = null; // active tablename
     /**
      * links (generated)
      *
-     * @var array
      * @access private
      */
-    var $_fkeys; // active tablename
+    var ?array $_fkeys = null; // active tablename
 
     /**
      * The 'starter' = call this to start the process
@@ -169,7 +165,7 @@ class DB_DataObject_Generator extends DB_DataObject
      * @var    string outputbuffer for table definitions
      * @access private
      */
-    var $_newConfig;
+    var ?string $_newConfig = null;
 
     /**
      * Build a list of tables;
@@ -778,7 +774,7 @@ class DB_DataObject_Generator extends DB_DataObject
             // only use primary key or nextval(), cause the setFrom blocks you setting all key items...
             // if no keys exist fall back to using unique
             //echo "\n{$t->name} => {$t->flags}\n";
-            $secondary_key_match = isset($options['generator_secondary_key_match']) ? $options['generator_secondary_key_match'] : 'primary|unique';
+            $secondary_key_match = $options['generator_secondary_key_match'] ?? 'primary|unique';
 
             $m = array();
             if (preg_match('/(auto_increment|nextval\(([^)]*))/i',rawurldecode($t->flags),$m)
@@ -955,10 +951,9 @@ class DB_DataObject_Generator extends DB_DataObject
     /**
      * class being generated
      *
-     * @var    string
      * @access private
      */
-    var $_className;
+    var string $_className;
 
     /**
      * The table class geneation part - single file.
@@ -1643,7 +1638,7 @@ class DB_DataObject_Generator extends DB_DataObject
         $dbtype     = $_DB_DATAOBJECT['CONNECTIONS'][$this->_database_dsn_md5]->dsn['phptype'];
         $realkeys   = $def['keys'];
         $keys       = array_keys($realkeys);
-        $usekey     = isset($keys[0]) ? $keys[0] : false;
+        $usekey     = $keys[0] ?? false;
         $table      = $def['table'];
 
 
@@ -1657,7 +1652,7 @@ class DB_DataObject_Generator extends DB_DataObject
             if (!empty($_DB_DATAOBJECT['CONFIG']['sequence_'.$this->__table])) {
                 $usekey = $_DB_DATAOBJECT['CONFIG']['sequence_'.$this->__table];
                 if (strpos($usekey,':') !== false) {
-                    list($usekey,$seqname) = explode(':',$usekey);
+                    [$usekey, $seqname] = explode(':',$usekey);
                 }
             }
 

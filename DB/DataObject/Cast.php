@@ -69,7 +69,7 @@ class DB_DataObject_Cast {
     * @var int  day/month/year
     * @access public
     */
-    var $day;
+    var int $day;
     var $month;
     var $year;
 
@@ -204,7 +204,7 @@ class DB_DataObject_Cast {
         }
         $r = new DB_DataObject_Cast;
         $r->type = 'date';
-        list($r->year,$r->month,$r->day) = $bits;
+        [$r->year, $r->month, $r->day] = $bits;
         return $r;
     }
 
@@ -244,7 +244,7 @@ class DB_DataObject_Cast {
         $args = func_get_args();
         switch(count($args)) {
             case 0: // no args = now!
-                $datetime = date('Y-m-d G:i:s', mktime());
+                $datetime = date('Y-m-d G:i:s', time());
 
             case 1:
                 // continue on from 0 args.
@@ -267,7 +267,7 @@ class DB_DataObject_Cast {
             return false;
         }
 
-        $r = DB_DataObject_Cast::date($bits[0], $bits[1], $bits[2]);
+        $r = (new DB_DataObject_Cast())->date($bits[0], $bits[1], $bits[2]);
         if (!$r) {
             return $r; // pass thru error (False) - doesnt happen at present!
         }
@@ -307,7 +307,7 @@ class DB_DataObject_Cast {
         $args = func_get_args();
         switch (count($args)) {
             case 0: // no args = now!
-                $time = date('G:i:s', mktime());
+                $time = date('G:i:s', time());
 
             case 1:
                 // continue on from 0 args.
@@ -385,7 +385,7 @@ class DB_DataObject_Cast {
                 return "'".pg_escape_bytea($this->value)."'::bytea";
 
             case 'mysql':
-                return "'".mysql_real_escape_string($this->value,$db->connection)."'";
+                return "'".mysql_real_escape_string($db->connection)."'";
 
             case 'mysqli':
                 // this is funny - the parameter order is reversed ;)
@@ -441,7 +441,7 @@ class DB_DataObject_Cast {
                 return "'".pg_escape_string($this->value)."'::bytea";
 
             case 'mysql':
-                return "'".mysql_real_escape_string($this->value,$db->connection)."'";
+                return "'".mysql_real_escape_string($db->connection)."'";
 
 
             case 'mysqli':
